@@ -1,3 +1,5 @@
+coefficients = {1: 1, 2: .943, 3: .906, 4: .881, 5: .851, 6: .831, 7: .807, 8: .786, 9: .765, 10: .744}
+
 @LiftForm = React.createClass
 
     getInitialState: ->
@@ -7,11 +9,10 @@
         weightlifted: ''
         repsperformed: ''
         onerm: 0
-        coefficients: {1: 1, 2: .943, 3: .906, 4: .881, 5: .851, 6: .831, 7: .807, 8: .786, 9: .765, 10: .744}
 
     calculateOneRm: ->
         if @state.weightlifted and @state.repsperformed
-            @state.onerm = @state.weightlifted / @state.coefficients[@state.repsperformed]
+            @state.onerm = @state.weightlifted / coefficients[@state.repsperformed]
         else
             0
 
@@ -22,8 +23,10 @@
     toggleUnit: (e) ->
         e.preventDefault()
         @setState ismetric: !@state.ismetric
+
     valid: ->
-        @state.date && @state.liftname && @state.weightlifted && @state.repsperformed && @state.onerm
+        @state.date && @state.liftname && @state.weightlifted && @state.repsperformed
+
     handleSubmit: (e) ->
         e.preventDefault()
         $.post '', {lift: @state}, (data) =>
@@ -54,9 +57,12 @@
                     onChange: @handleValueChange
             React.DOM.a
                 className: 'btn btn-primary'
+                name: 'ismetric'
                 onClick: @toggleUnit
                 'Metric = ' + @state.ismetric.toString()
-            React.DOM.input
+            React.DOM.div
+                className: 'form-group'
+                React.DOM.input
                     type: 'number'
                     className: 'form-control'
                     placeholder: 'weightlifted'
